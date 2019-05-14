@@ -26,7 +26,7 @@ class AwBaseNode(object):
 
     def nodename(self): # ToDo: remove
         return self.__nodename
-    
+
     def name(self):
         return self.__nodename
 
@@ -41,7 +41,7 @@ class AwBaseNode(object):
 
     def children(self): # ToDo: remove
         return self.__children
-    
+
     def childnodes(self):
         return self.__children
 
@@ -85,7 +85,7 @@ class AwBaseTree(AwBaseNode):
 
     def path(self):
         return ""
-    
+
     def fullpath(self):
         return self.treepath
 
@@ -110,6 +110,7 @@ class AwLaunchTree(AwBaseTree):
         return "Tree:{} Children:{}".format(self.nodename(), childnames)
 
     def save(self, treepath):
+        treepath = myutils.profile(treepath)
         self.treepath = treepath
         with open(treepath + ".launch", mode = "w") as fp:
             fp.write("dummy")
@@ -137,7 +138,7 @@ class AwLaunchTree(AwBaseTree):
         launch.plugin = plugin
         launch.config = plugin.default_config()
         self.addchild(launch)
-    
+
     def export(self, rootpath):
         for node in self.listnode():
             xtext = node.generate_launch()

@@ -1,8 +1,8 @@
+
+import os
+from autoware_launcher.core import myutils
 from python_qt_binding import QtCore
 from python_qt_binding import QtWidgets
-
-from ..core import myutils
-
 
 
 class AwAbstructWindow(QtWidgets.QMainWindow):
@@ -71,13 +71,14 @@ class AwMainWindow(AwAbstructWindow):
         self.viewmenu.addAction(action)
 
     def load_profile(self):
-        import os
         filename, filetype = QtWidgets.QFileDialog.getOpenFileName(self, "Load Profile", myutils.profile(), "Launch Profile (*.launch)")
         filename, filetype = os.path.splitext(filename)
         if filename:
+            print filename
             self.client.load_profile(filename)
 
     def save_profile(self):
+        self.select_load_profile()
         pass
 
     def save_profile_as(self):
@@ -88,9 +89,50 @@ class AwMainWindow(AwAbstructWindow):
             if filetype != ".launch":
                 filename = filename + filetype
             self.client.save_profile(filename)
-    
+
     def export_profile(self):
         import os
         dirname = QtWidgets.QFileDialog.getExistingDirectory(self, "Export Profile", myutils.package("launch"))
         if dirname:
             self.client.export_profile(dirname)
+
+    def select_load_profile(self):
+
+        window = QtWidgets.QMainWindow(self)
+
+        cancel = QtWidgets.QPushButton("Cancel")
+        choose = QtWidgets.QPushButton("OK")
+        cancel.clicked.connect(window.close)
+        choose.clicked.connect(self.selected_load_profile)
+
+        footer = QtWidgets.QHBoxLayout()
+        footer.addStretch()
+        footer.addWidget(cancel)
+        footer.addWidget(choose)
+
+        select = QtWidgets.QListWidget()
+        path = myutils.profile()
+        for name in sorted(os.listdir(path)):
+            if os.path.isdir(os.path.join(path, name)):
+                select.addItem(name)
+
+        self.profile_window = window
+        self.profile_select = select
+
+        widget = QtWidgets.QWidget()
+        widget.setLayout(QtWidgets.QVBoxLayout())
+        widget.layout().addWidget(select)
+        widget.layout().addLayout(footer)
+
+        window.setCentralWidget(widget)
+        window.setAttribute(QtCore.Qt.WA_DeleteOnClose, True)
+        window.setWindowModality(QtCore.Qt.ApplicationModal)
+        window.show()
+
+    def selected_load_profile(self):
+
+        items = self.profile_select.selectedItems()
+        if len(items) == 1:
+            name = items[0].text()
+            print name
+            self.profile_window.close()

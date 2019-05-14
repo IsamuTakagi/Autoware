@@ -55,12 +55,12 @@ class AwLaunchServer(AwLaunchServerIF):
     def load_profile(self, fpath):
         logger.debug("load_profile: " + fpath)
         self.__profile = AwLaunchTree(self, self.__plugins)
-        self.__profile.load(myutils.profile(fpath), self.__plugins)
+        self.__profile.load(fpath, self.__plugins)
         for client in self.__clients: client.profile_updated()
 
     def save_profile(self, fpath):
         logger.debug("save_profile: " + fpath)
-        self.__profile.save(myutils.profile(fpath))
+        self.__profile.save(fpath)
 
     def export_profile(self, fpath):
         logger.debug("export_profile: " + fpath)
