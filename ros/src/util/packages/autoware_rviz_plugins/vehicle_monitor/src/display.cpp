@@ -58,7 +58,7 @@ void VehicleMonitor::onEnable()
 {
     subscribeTopic(property_topic_cmd_->getTopicStd(), sub_cmd_, &VehicleMonitor::processCmd);
     subscribeTopic(property_topic_status_->getTopicStd(), sub_status_, &VehicleMonitor::processStatus);
-    subscribeTopic(property_topic_mode_->getTopicStd(), sub_status_, &VehicleMonitor::processMode);
+    subscribeTopic(property_topic_mode_->getTopicStd(), sub_mode_, &VehicleMonitor::processMode);
 }
 
 void VehicleMonitor::onDisable()
@@ -121,7 +121,7 @@ void VehicleMonitor::update_topic_status()
 
 void VehicleMonitor::update_topic_mode()
 {
-    subscribeTopic(property_topic_mode_->getTopicStd(), sub_status_, &VehicleMonitor::processMode);
+    subscribeTopic(property_topic_mode_->getTopicStd(), sub_mode_, &VehicleMonitor::processMode);
 }
 
 void VehicleMonitor::update_speed_max()
